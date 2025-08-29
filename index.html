@@ -311,14 +311,14 @@
         </div>
 
         <div class="controls">
-            <button class="btn btn-success" id="goodAnswerBtn">👍 İyi Cevap (+10 Puan)</button>
-            <button class="btn btn-warning" id="okAnswerBtn">👌 Orta Cevap (+5 Puan)</button>
+            <button class="btn btn-success" id="yesAnswerBtn">✅ Evet (+10 Puan)</button>
+            <button class="btn btn-danger" id="noAnswerBtn">❌ Hayır (0 Puan)</button>
             <button class="btn btn-primary" id="nextBtn">➡️ Sonraki Soru</button>
         </div>
 
         <div class="controls">
             <button class="btn btn-primary" id="prevBtn">⬅️ Önceki Soru</button>
-            <button class="btn btn-danger" id="skipBtn">⏭️ Soruyu Geç</button>
+            <button class="btn btn-warning" id="skipBtn">⏭️ Soruyu Geç</button>
         </div>
 
         <div class="completion-screen" id="completionScreen">
@@ -459,8 +459,8 @@
             completionScreen: document.getElementById('completionScreen'),
             finalScore: document.getElementById('finalScore'),
             empathyLevel: document.getElementById('empathyLevel'),
-            goodAnswerBtn: document.getElementById('goodAnswerBtn'),
-            okAnswerBtn: document.getElementById('okAnswerBtn'),
+            yesAnswerBtn: document.getElementById('yesAnswerBtn'),
+            noAnswerBtn: document.getElementById('noAnswerBtn'),
             nextBtn: document.getElementById('nextBtn'),
             prevBtn: document.getElementById('prevBtn'),
             skipBtn: document.getElementById('skipBtn'),
@@ -484,9 +484,9 @@
                     oscillator.frequency.setValueAtTime(659.25, audioContext.currentTime + 0.1); // E5
                     oscillator.frequency.setValueAtTime(783.99, audioContext.currentTime + 0.2); // G5
                     break;
-                case 'ok':
-                    oscillator.frequency.setValueAtTime(440, audioContext.currentTime); // A4
-                    oscillator.frequency.setValueAtTime(523.25, audioContext.currentTime + 0.1); // C5
+                case 'no':
+                    oscillator.frequency.setValueAtTime(349.23, audioContext.currentTime); // F4
+                    oscillator.frequency.setValueAtTime(293.66, audioContext.currentTime + 0.1); // D4
                     break;
                 case 'next':
                     oscillator.frequency.setValueAtTime(523.25, audioContext.currentTime); // C5
@@ -542,9 +542,9 @@
             if (points === 10) {
                 playSound('success');
                 showFeedback('Harika cevap! 🌟', 'success');
-            } else if (points === 5) {
-                playSound('ok');
-                showFeedback('İyi cevap! 👍', 'ok');
+            } else if (points === 0) {
+                playSound('no');
+                showFeedback('Başka bir sefer daha iyi olacak! 💪', 'no');
             }
         }
 
@@ -556,7 +556,7 @@
                 top: 50%;
                 left: 50%;
                 transform: translate(-50%, -50%);
-                background: ${type === 'success' ? '#27ae60' : '#f39c12'};
+                background: ${type === 'success' ? '#27ae60' : '#e74c3c'};
                 color: white;
                 padding: 20px 40px;
                 border-radius: 15px;
@@ -631,8 +631,8 @@
         }
 
         // Event listeners
-        elements.goodAnswerBtn.addEventListener('click', () => addScore(10, 2));
-        elements.okAnswerBtn.addEventListener('click', () => addScore(5, 1));
+        elements.yesAnswerBtn.addEventListener('click', () => addScore(10, 2));
+        elements.noAnswerBtn.addEventListener('click', () => addScore(0, 0));
         elements.nextBtn.addEventListener('click', nextQuestion);
         elements.prevBtn.addEventListener('click', prevQuestion);
         elements.skipBtn.addEventListener('click', nextQuestion);
@@ -643,10 +643,10 @@
         document.addEventListener('keydown', (e) => {
             switch(e.key) {
                 case '1':
-                    elements.goodAnswerBtn.click();
+                    elements.yesAnswerBtn.click();
                     break;
                 case '2':
-                    elements.okAnswerBtn.click();
+                    elements.noAnswerBtn.click();
                     break;
                 case 'ArrowRight':
                     nextQuestion();
