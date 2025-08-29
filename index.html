@@ -1,0 +1,668 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hadi Anlaşalım - Empati ve Hoşgörü Oyunu</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+            background: linear-gradient(135deg, #ff9a9e 0%, #fecfef 50%, #fecfef 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 30px;
+            background: rgba(255,255,255,0.9);
+            padding: 25px;
+            border-radius: 20px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+        }
+
+        .header h1 {
+            font-size: 3rem;
+            margin-bottom: 10px;
+            color: #e74c3c;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .header p {
+            font-size: 1.3rem;
+            color: #34495e;
+        }
+
+        .score-board {
+            background: rgba(255,255,255,0.95);
+            border-radius: 20px;
+            padding: 25px;
+            margin-bottom: 30px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+        }
+
+        .score-display {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .score-item {
+            text-align: center;
+            padding: 15px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border-radius: 15px;
+            min-width: 120px;
+        }
+
+        .score-item h3 {
+            font-size: 1.1rem;
+            margin-bottom: 5px;
+        }
+
+        .score-item .number {
+            font-size: 2rem;
+            font-weight: bold;
+        }
+
+        .question-container {
+            background: rgba(255,255,255,0.95);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+            min-height: 400px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .question-number {
+            font-size: 1.5rem;
+            color: #e74c3c;
+            font-weight: bold;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .scenario {
+            font-size: 1.4rem;
+            color: #2c3e50;
+            margin-bottom: 25px;
+            line-height: 1.6;
+            text-align: center;
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 15px;
+            border-left: 5px solid #3498db;
+        }
+
+        .question {
+            font-size: 1.3rem;
+            color: #27ae60;
+            margin-bottom: 30px;
+            line-height: 1.6;
+            text-align: center;
+            background: #e8f5e8;
+            padding: 20px;
+            border-radius: 15px;
+        }
+
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 15px 30px;
+            border: none;
+            border-radius: 25px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-family: 'Comic Sans MS', cursive;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            color: white;
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #27ae60, #229954);
+            color: white;
+        }
+
+        .btn-warning {
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            color: white;
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, #e74c3c, #c0392b);
+            color: white;
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .completion-screen {
+            background: rgba(255,255,255,0.95);
+            border-radius: 20px;
+            padding: 40px;
+            text-align: center;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+            display: none;
+        }
+
+        .completion-screen h2 {
+            font-size: 2.5rem;
+            color: #27ae60;
+            margin-bottom: 20px;
+        }
+
+        .final-score {
+            font-size: 1.5rem;
+            color: #2c3e50;
+            margin-bottom: 30px;
+        }
+
+        .celebration {
+            font-size: 4rem;
+            margin: 20px 0;
+            animation: bounce 1s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {
+                transform: translateY(0);
+            }
+            40% {
+                transform: translateY(-10px);
+            }
+            60% {
+                transform: translateY(-5px);
+            }
+        }
+
+        .progress-bar {
+            background: #ecf0f1;
+            height: 15px;
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 20px 0;
+        }
+
+        .progress-fill {
+            background: linear-gradient(90deg, #27ae60, #2ecc71);
+            height: 100%;
+            border-radius: 10px;
+            transition: width 0.5s ease;
+            width: 0%;
+        }
+
+        .sound-controls {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+        }
+
+        .sound-btn {
+            background: rgba(255,255,255,0.9);
+            border: none;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            font-size: 1.5rem;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+           
+            .score-display {
+                flex-direction: column;
+            }
+           
+            .controls {
+                flex-direction: column;
+                align-items: center;
+            }
+           
+            .btn {
+                width: 100%;
+                max-width: 300px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="sound-controls">
+        <button class="sound-btn" id="soundToggle" title="Ses Aç/Kapat">🔊</button>
+    </div>
+
+    <div class="container">
+        <div class="header">
+            <h1>🤝 HADİ ANLAŞALIM 🤝</h1>
+            <p>Empati ve Hoşgörü Sınıf Oyunu</p>
+        </div>
+
+        <div class="score-board">
+            <div class="score-display">
+                <div class="score-item">
+                    <h3>Soru</h3>
+                    <div class="number" id="currentQuestion">1</div>
+                </div>
+                <div class="score-item">
+                    <h3>Toplam Soru</h3>
+                    <div class="number" id="totalQuestions">25</div>
+                </div>
+                <div class="score-item">
+                    <h3>Sınıf Puanı</h3>
+                    <div class="number" id="classScore">0</div>
+                </div>
+                <div class="score-item">
+                    <h3>Empati Puanı</h3>
+                    <div class="number" id="empathyScore">0</div>
+                </div>
+            </div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+        </div>
+
+        <div class="question-container" id="questionContainer">
+            <div class="question-number" id="questionNumber">1. SORU</div>
+            <div class="scenario" id="scenario"></div>
+            <div class="question" id="question"></div>
+        </div>
+
+        <div class="controls">
+            <button class="btn btn-success" id="goodAnswerBtn">👍 İyi Cevap (+10 Puan)</button>
+            <button class="btn btn-warning" id="okAnswerBtn">👌 Orta Cevap (+5 Puan)</button>
+            <button class="btn btn-primary" id="nextBtn">➡️ Sonraki Soru</button>
+        </div>
+
+        <div class="controls">
+            <button class="btn btn-primary" id="prevBtn">⬅️ Önceki Soru</button>
+            <button class="btn btn-danger" id="skipBtn">⏭️ Soruyu Geç</button>
+        </div>
+
+        <div class="completion-screen" id="completionScreen">
+            <div class="celebration">🎉🎊🏆</div>
+            <h2>TEBRİKLER SINIFIMIZ!</h2>
+            <div class="final-score">
+                <p>Toplam Sınıf Puanınız: <strong id="finalScore">0</strong></p>
+                <p>Empati Seviyeniz: <strong id="empathyLevel">Harika!</strong></p>
+            </div>
+            <div class="celebration">👏👏👏</div>
+            <p style="font-size: 1.3rem; color: #27ae60; margin: 20px 0;">
+                Sınıfımız empati ve hoşgörü konusunda çok başarılı!
+                Birbirimizi anlayarak daha güzel bir sınıf olduk! 🌟
+            </p>
+            <button class="btn btn-success" id="restartBtn">🔄 Yeniden Oyna</button>
+        </div>
+    </div>
+
+    <script>
+        const questions = [
+            {
+                scenario: "Bir sınıf arkadaşın seni oyuna almadı.",
+                question: "👉 Kendini oyuna alınmayan birinin yerine koyarsan nasıl hissedersin? Ona barışçıl şekilde ne söyleyebilirsin?"
+            },
+            {
+                scenario: "Yanındaki öğrenci derste konuştu ve seni rahatsız etti.",
+                question: "👉 Böyle bir durumda empatiyle düşündüğünde, yanındaki öğrenci neden konuşmak istemiş olabilir? Sen ne yapabilirsin?"
+            },
+            {
+                scenario: "Oyun sırasında resmini yanlışlıkla yırtan biri oldu.",
+                question: "👉 Resmi yırtılan biri ne hisseder? Onu suçlamak yerine nasıl çözüm bulunabilir?"
+            },
+            {
+                scenario: "Bir çocuk oyuncaklarını izinsiz aldı.",
+                question: "👉 Oyuncağı alınan birinin duygusu ne olur? Hoşgörülü davranmak için ne yapabilirsin?"
+            },
+            {
+                scenario: "Sırada beklerken biri seni itti.",
+                question: "👉 İtilen birinin kalbinden hangi duygular geçer? Empati kurarak nasıl tepki verebilirsin?"
+            },
+            {
+                scenario: "Konuşurken sözünü kesen bir öğrenci oldu.",
+                question: "👉 Sözün kesildiğinde hangi duyguları yaşarsın? Sözünü kesen kişiye barışçıl şekilde ne söyleyebilirsin?"
+            },
+            {
+                scenario: "Yanlışlıkla defterine yazan biri oldu.",
+                question: "👉 Defterine yazılsa ne hissederdin? Bunun kazayla olduğunu düşünerek nasıl tepki verebilirsin?"
+            },
+            {
+                scenario: "Bahçede topunu uzağa atan biri oldu.",
+                question: "👉 Topunu atan kişiye hemen kızmak yerine önce ne düşünebilirsin?"
+            },
+            {
+                scenario: "Başka bir öğrenci senin sırana oturdu.",
+                question: "👉 Sırana oturan kişiye nasıl yaklaşsan barışı koruyabilirsin?"
+            },
+            {
+                scenario: "Bir çocuk adını yanlış söyledi ve güldü.",
+                question: "👉 Bunu yaşayan biri nasıl hisseder? Ona empatiyle ne söyleyebilirsin?"
+            },
+            {
+                scenario: "Sınıftan biri sana lakap taktı.",
+                question: "👉 Lakap takılan birinin duyguları neler olur? Bu durumu hoşgörüyle çözmek için ne yapabilirsin?"
+            },
+            {
+                scenario: "Beraber oynarken seni seçmeyenler oldu.",
+                question: "👉 Oyuna seçilmeyen biri hangi duyguları yaşar? Onlara ne söylemek barış getirir?"
+            },
+            {
+                scenario: "Grup çalışmasında senin fikrini dinlemeyenler oldu.",
+                question: "👉 Fikrini söyleyemeyen biri nasıl hisseder? Arkadaşlarını kırmadan kendini nasıl ifade edebilirsin?"
+            },
+            {
+                scenario: "Bir arkadaşın seninle tartıştı.",
+                question: "👉 Tartışma sırasında hangi duyguları fark edersin? Barışmak için nasıl davranabilirsin?"
+            },
+            {
+                scenario: "Bir öğrenci eşyalarını yere düşürdü.",
+                question: "👉 Eşyaları düşen biri nasıl tepki verir? Empati kurarsan ne yaparsın?"
+            },
+            {
+                scenario: "Bir çocuk ödevine bakıp inceledi.",
+                question: "👉 Senin ödevine bakılsa neler hissedersin? Bu durumu hoşgörülü çözmek için nasıl yaklaşabilirsin?"
+            },
+            {
+                scenario: "Şarkı söylerken sana gülenler oldu.",
+                question: "👉 Bunun seni nasıl etkilediğini düşün. Empatiyle çözüm için onlara ne söyleyebilirsin?"
+            },
+            {
+                scenario: "Resim yaparken seninle dalga geçen oldu.",
+                question: "👉 Dalga geçilen biri ne hisseder? Ona hoşgörülü bir yanıt nasıl verebilirsin?"
+            },
+            {
+                scenario: "Bir grup öğrenci senin grubunu bozdu.",
+                question: "👉 Grubu bozulan biri hangi duyguları yaşar? Empatiyle çözüm için hangi yolu seçebilirsin?"
+            },
+            {
+                scenario: "Sınıftan biri en yakın arkadaşınla tartıştı.",
+                question: "👉 Arkadaşların tartıştığında sen ne hissedersin? Onlara barış için nasıl destek olabilirsin?"
+            },
+            {
+                scenario: "Başka biri senin sırana yazı yazdı.",
+                question: "👉 Sırasına yazı yazılan biri nasıl hisseder? Bunun barışçıl çözümü ne olabilir?"
+            },
+            {
+                scenario: "Bir öğrenci sana kızıp bağırdı.",
+                question: "👉 Sana bağırıldığında hangi duyguları yaşarsın? Ona empatiyle nasıl yaklaşabilirsin?"
+            },
+            {
+                scenario: "Kalabalıkta biri yanlışlıkla ayağına bastı.",
+                question: "👉 Ayağına basılan biri kızar mı, yoksa anlayış gösterebilir mi? Hoşgörülü davranış ne olurdu?"
+            },
+            {
+                scenario: "Bir çocuk oyuncaklarını paylaşmadı.",
+                question: "👉 Paylaşılmadığında hangi duygular oluşur? Barışı koruyarak nasıl tepki verebilirsin?"
+            },
+            {
+                scenario: "Bir öğrenci senin sırasına çöp bıraktı.",
+                question: "👉 Sırasına çöp bırakılan biri neler hisseder? Hoşgörüyle çözmek için ne yapabilirsin?"
+            }
+        ];
+
+        let currentQuestionIndex = 0;
+        let classScore = 0;
+        let empathyScore = 0;
+        let soundEnabled = true;
+
+        const elements = {
+            currentQuestion: document.getElementById('currentQuestion'),
+            totalQuestions: document.getElementById('totalQuestions'),
+            classScore: document.getElementById('classScore'),
+            empathyScore: document.getElementById('empathyScore'),
+            progressFill: document.getElementById('progressFill'),
+            questionNumber: document.getElementById('questionNumber'),
+            scenario: document.getElementById('scenario'),
+            question: document.getElementById('question'),
+            questionContainer: document.getElementById('questionContainer'),
+            completionScreen: document.getElementById('completionScreen'),
+            finalScore: document.getElementById('finalScore'),
+            empathyLevel: document.getElementById('empathyLevel'),
+            goodAnswerBtn: document.getElementById('goodAnswerBtn'),
+            okAnswerBtn: document.getElementById('okAnswerBtn'),
+            nextBtn: document.getElementById('nextBtn'),
+            prevBtn: document.getElementById('prevBtn'),
+            skipBtn: document.getElementById('skipBtn'),
+            restartBtn: document.getElementById('restartBtn'),
+            soundToggle: document.getElementById('soundToggle')
+        };
+
+        function playSound(type) {
+            if (!soundEnabled) return;
+           
+            const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            const oscillator = audioContext.createOscillator();
+            const gainNode = audioContext.createGain();
+           
+            oscillator.connect(gainNode);
+            gainNode.connect(audioContext.destination);
+           
+            switch(type) {
+                case 'success':
+                    oscillator.frequency.setValueAtTime(523.25, audioContext.currentTime); // C5
+                    oscillator.frequency.setValueAtTime(659.25, audioContext.currentTime + 0.1); // E5
+                    oscillator.frequency.setValueAtTime(783.99, audioContext.currentTime + 0.2); // G5
+                    break;
+                case 'ok':
+                    oscillator.frequency.setValueAtTime(440, audioContext.currentTime); // A4
+                    oscillator.frequency.setValueAtTime(523.25, audioContext.currentTime + 0.1); // C5
+                    break;
+                case 'next':
+                    oscillator.frequency.setValueAtTime(523.25, audioContext.currentTime); // C5
+                    break;
+                case 'complete':
+                    // Celebration sound
+                    for(let i = 0; i < 5; i++) {
+                        setTimeout(() => {
+                            const osc = audioContext.createOscillator();
+                            const gain = audioContext.createGain();
+                            osc.connect(gain);
+                            gain.connect(audioContext.destination);
+                            osc.frequency.setValueAtTime(523.25 + (i * 100), audioContext.currentTime);
+                            gain.gain.setValueAtTime(0.3, audioContext.currentTime);
+                            gain.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.3);
+                            osc.start(audioContext.currentTime);
+                            osc.stop(audioContext.currentTime + 0.3);
+                        }, i * 100);
+                    }
+                    return;
+            }
+           
+            gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.5);
+           
+            oscillator.start(audioContext.currentTime);
+            oscillator.stop(audioContext.currentTime + 0.5);
+        }
+
+        function updateDisplay() {
+            const question = questions[currentQuestionIndex];
+           
+            elements.currentQuestion.textContent = currentQuestionIndex + 1;
+            elements.questionNumber.textContent = `${currentQuestionIndex + 1}. SORU`;
+            elements.scenario.textContent = question.scenario;
+            elements.question.textContent = question.question;
+            elements.classScore.textContent = classScore;
+            elements.empathyScore.textContent = empathyScore;
+           
+            const progress = ((currentQuestionIndex + 1) / questions.length) * 100;
+            elements.progressFill.style.width = `${progress}%`;
+           
+            elements.prevBtn.disabled = currentQuestionIndex === 0;
+            elements.nextBtn.disabled = currentQuestionIndex === questions.length - 1;
+        }
+
+        function addScore(points, empathyPoints = 0) {
+            classScore += points;
+            empathyScore += empathyPoints;
+            updateDisplay();
+           
+            // Visual feedback
+            if (points === 10) {
+                playSound('success');
+                showFeedback('Harika cevap! 🌟', 'success');
+            } else if (points === 5) {
+                playSound('ok');
+                showFeedback('İyi cevap! 👍', 'ok');
+            }
+        }
+
+        function showFeedback(message, type) {
+            const feedback = document.createElement('div');
+            feedback.textContent = message;
+            feedback.style.cssText = `
+                position: fixed;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                background: ${type === 'success' ? '#27ae60' : '#f39c12'};
+                color: white;
+                padding: 20px 40px;
+                border-radius: 15px;
+                font-size: 1.5rem;
+                font-weight: bold;
+                z-index: 1000;
+                animation: feedbackPop 2s ease-out forwards;
+            `;
+           
+            const style = document.createElement('style');
+            style.textContent = `
+                @keyframes feedbackPop {
+                    0% { opacity: 0; transform: translate(-50%, -50%) scale(0.5); }
+                    20% { opacity: 1; transform: translate(-50%, -50%) scale(1.1); }
+                    100% { opacity: 0; transform: translate(-50%, -50%) scale(1); }
+                }
+            `;
+            document.head.appendChild(style);
+            document.body.appendChild(feedback);
+           
+            setTimeout(() => {
+                document.body.removeChild(feedback);
+                document.head.removeChild(style);
+            }, 2000);
+        }
+
+        function nextQuestion() {
+            if (currentQuestionIndex < questions.length - 1) {
+                currentQuestionIndex++;
+                updateDisplay();
+                playSound('next');
+            } else {
+                showCompletion();
+            }
+        }
+
+        function prevQuestion() {
+            if (currentQuestionIndex > 0) {
+                currentQuestionIndex--;
+                updateDisplay();
+                playSound('next');
+            }
+        }
+
+        function showCompletion() {
+            elements.questionContainer.style.display = 'none';
+            elements.completionScreen.style.display = 'block';
+            elements.finalScore.textContent = classScore;
+           
+            let level = 'Başlangıç';
+            if (classScore >= 200) level = 'Empati Ustası! 🏆';
+            else if (classScore >= 150) level = 'Çok İyi! 🌟';
+            else if (classScore >= 100) level = 'İyi! 👍';
+            else if (classScore >= 50) level = 'Orta 👌';
+           
+            elements.empathyLevel.textContent = level;
+            playSound('complete');
+        }
+
+        function restart() {
+            currentQuestionIndex = 0;
+            classScore = 0;
+            empathyScore = 0;
+            elements.questionContainer.style.display = 'block';
+            elements.completionScreen.style.display = 'none';
+            updateDisplay();
+        }
+
+        function toggleSound() {
+            soundEnabled = !soundEnabled;
+            elements.soundToggle.textContent = soundEnabled ? '🔊' : '🔇';
+        }
+
+        // Event listeners
+        elements.goodAnswerBtn.addEventListener('click', () => addScore(10, 2));
+        elements.okAnswerBtn.addEventListener('click', () => addScore(5, 1));
+        elements.nextBtn.addEventListener('click', nextQuestion);
+        elements.prevBtn.addEventListener('click', prevQuestion);
+        elements.skipBtn.addEventListener('click', nextQuestion);
+        elements.restartBtn.addEventListener('click', restart);
+        elements.soundToggle.addEventListener('click', toggleSound);
+
+        // Keyboard shortcuts
+        document.addEventListener('keydown', (e) => {
+            switch(e.key) {
+                case '1':
+                    elements.goodAnswerBtn.click();
+                    break;
+                case '2':
+                    elements.okAnswerBtn.click();
+                    break;
+                case 'ArrowRight':
+                    nextQuestion();
+                    break;
+                case 'ArrowLeft':
+                    prevQuestion();
+                    break;
+                case ' ':
+                    e.preventDefault();
+                    nextQuestion();
+                    break;
+            }
+        });
+
+        // Initialize
+        updateDisplay();
+    </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'976a481126305840',t:'MTc1NjQ1MTk4MS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
